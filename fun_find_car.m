@@ -8,7 +8,6 @@ function fun_find_car(Temp, C, img)
     
     [max_val, linear_idx] = max(C(:));
     [row, col] = ind2sub(size(C), linear_idx);
-    disp(mask(row,col));
 
     figure,imagesc(seg),colormap gray, title('segmented object (blob)') %binary image (segmented image, i.e. detection of a given color)
 
