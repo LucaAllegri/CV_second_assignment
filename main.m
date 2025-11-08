@@ -8,12 +8,12 @@ clc, clearvars, close all
 % RED CAR 
 %------------------------------------
 
-img{1}=im2gray(imread('Lab5_testimages\ur_c_s_03a_01_L_0376.png'));
-img{2}=im2gray(imread('Lab5_testimages\ur_c_s_03a_01_L_0377.png'));
-img{3}=im2gray(imread('Lab5_testimages\ur_c_s_03a_01_L_0378.png'));
-img{4}=im2gray(imread('Lab5_testimages\ur_c_s_03a_01_L_0379.png'));
-img{5}=im2gray(imread('Lab5_testimages\ur_c_s_03a_01_L_0380.png'));
-img{6}=im2gray(imread('Lab5_testimages\ur_c_s_03a_01_L_0381.png'));
+img{1}=im2gray(imread('Lab5_testimages/ur_c_s_03a_01_L_0376.png'));
+img{2}=im2gray(imread('Lab5_testimages/ur_c_s_03a_01_L_0377.png'));
+img{3}=im2gray(imread('Lab5_testimages/ur_c_s_03a_01_L_0378.png'));
+img{4}=im2gray(imread('Lab5_testimages/ur_c_s_03a_01_L_0379.png'));
+img{5}=im2gray(imread('Lab5_testimages/ur_c_s_03a_01_L_0380.png'));
+img{6}=im2gray(imread('Lab5_testimages/ur_c_s_03a_01_L_0381.png'));
 
 figure,imagesc(img{1}),colormap gray
 
@@ -21,14 +21,15 @@ T{1}=img{1}(360:410,690:770);
 figure,imagesc(T{1}),colormap gray;
 
 for i=1:6
-    C_red{i} = normxcorr2(T{1}, img{i});
+    C_red{i} = NCC_function(T{1}, img{i});
     figure, imagesc(C_red{i}), colormap gray;
 end
 
 for i=1:6
-    fun_find_car(T{1}, C_red{i}, img{i});
+    find_car(T{1}, C_red{i}, img{i}, i);
 end
 
+%%
 %------------------------------------
 % DARK CAR 
 %------------------------------------
@@ -42,10 +43,13 @@ for i=1:6
 end
 
 for i=1:6
-    fun_find_car(T{2}, C_dark{i}, img{i});
+    find_car(T{2}, C_dark{i}, img{i},i);
 end
 
 %%
+%------------------------------------
+% WINDOW 1 
+%------------------------------------
 
 T{3}=img{1}(365:415,555:647);
 figure,imagesc(T{3}),colormap gray;
@@ -56,10 +60,13 @@ for i=1:6
 end
 
 for i=1:6
-    fun_find_car(T{3}, C_dark{i}, img{i});
+    find_car(T{3}, C_dark{i}, img{i},i);
 end
 
 %%
+%------------------------------------
+% WINDOW 2
+%------------------------------------
 T{4}=img{1}(360:420,550:652);
 figure,imagesc(T{4}),colormap gray;
 
@@ -69,7 +76,7 @@ for i=1:6
 end
 
 for i=1:6
-    fun_find_car(T{4}, C_dark{i}, img{i});
+    find_car(T{4}, C_dark{i}, img{i},i);
 end
 
 
@@ -84,7 +91,7 @@ end
 % Harris corner detection
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-tmp=imread('Lab5_testimages\i235.png');
+tmp=imread('Lab5_testimages/i235.png');
 I=double(tmp);
 figure,imagesc(I),colormap gray
 

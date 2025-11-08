@@ -1,5 +1,5 @@
 clc, clearvars, close all
-
+%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % NCC-based segmentation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -7,6 +7,9 @@ clc, clearvars, close all
 %------------------------------------
 % RED CAR 
 %------------------------------------
+im = imread("Lab5_testimages/ur_c_s_03a_01_L_0376.png");
+
+
 
 img{1}=im2gray(imread('Lab5_testimages\ur_c_s_03a_01_L_0376.png'));
 img{2}=im2gray(imread('Lab5_testimages\ur_c_s_03a_01_L_0377.png'));
@@ -45,11 +48,13 @@ for i=1:6
     fun_find_car(T{2}, C_dark{i}, img{i});
 end
 
-T{3}=img{1}(370:410,560:642);
+%%
+
+T{3}=img{1}(365:415,555:647);
 figure,imagesc(T{3}),colormap gray;
 
 for i=1:6
-    C_dark{i} = normxcorr2(T{2}, img{i});
+    C_dark{i} = normxcorr2(T{3}, img{i});
     figure, imagesc(C_dark{i}), colormap gray;
 end
 
@@ -57,11 +62,12 @@ for i=1:6
     fun_find_car(T{3}, C_dark{i}, img{i});
 end
 
-T{4}=img{1}(370:410,560:642);
+%%
+T{4}=img{1}(360:420,550:652);
 figure,imagesc(T{4}),colormap gray;
 
 for i=1:6
-    C_dark{i} = normxcorr2(T{2}, img{i});
+    C_dark{i} = normxcorr2(T{4}, img{i});
     figure, imagesc(C_dark{i}), colormap gray;
 end
 
@@ -70,7 +76,7 @@ for i=1:6
 end
 
 
-
+%%
 %------------------------------------
 % PUNTO 3 
 %------------------------------------
