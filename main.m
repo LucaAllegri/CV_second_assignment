@@ -38,7 +38,7 @@ T{2}=img{1}(370:410,560:642);
 figure,imagesc(T{2}),colormap gray;
 
 for i=1:6
-    C_dark{i} = normxcorr2(T{2}, img{i});
+    C_dark{i} = NCC_function(T{2}, img{i});
     figure, imagesc(C_dark{i}), colormap gray;
 end
 
@@ -55,7 +55,7 @@ T{3}=img{1}(365:415,555:647);
 figure,imagesc(T{3}),colormap gray;
 
 for i=1:6
-    C_dark{i} = normxcorr2(T{3}, img{i});
+    C_dark{i} = NCC_function(T{3}, img{i});
     figure, imagesc(C_dark{i}), colormap gray;
 end
 
@@ -71,7 +71,7 @@ T{4}=img{1}(360:420,550:652);
 figure,imagesc(T{4}),colormap gray;
 
 for i=1:6
-    C_dark{i} = normxcorr2(T{4}, img{i});
+    C_dark{i} = NCC_function(T{4}, img{i});
     figure, imagesc(C_dark{i}), colormap gray;
 end
 
