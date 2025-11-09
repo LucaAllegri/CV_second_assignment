@@ -96,10 +96,9 @@ I=double(tmp);
 figure,imagesc(I),colormap gray
 
 %compute x and y derivative of the image
-dx=[1 0 -1; 2 0 -2; 1 0 -1];  %MATRICI/KERNEL DEL FILTRO DI SOBEL 
-dy=[1 2 1; 0  0  0; -1 -2 -1]; %PER L'APPROSSIMAZIONE DELLE DERIVATE SPAZIALI
-%dx rileva i bordi verticali
-%dy rileva i bordi orizzontali
+dx=[1 0 -1; 2 0 -2; 1 0 -1]; 
+dy=[1 2 1; 0  0  0; -1 -2 -1]; 
+
 
 Ix=conv2(I,dx,'same'); %immagini delle derivate in direzione x
 Iy=conv2(I,dy,'same'); %immagini delle derivate in direzione y
@@ -108,21 +107,17 @@ figure,imagesc(Iy),colormap gray,title('Iy')
 
 %compute products of derivatives at every pixel
 Ix2=Ix.*Ix; Iy2=Iy.*Iy; Ixy=Ix.*Iy;
-%calcola i componenti della matrice di auto-correlazione
 
-%compute the sum of products of  derivatives at each pixel
-g = fspecial('gaussian', 9, 1.2); %crea un filtro gaussiano 9x9 con deviazione 1,2
+g = fspecial('gaussian', 9, 1.2); 
 figure,imagesc(g),colormap gray,title('Gaussian')
 Sx2=conv2(Ix2,g,'same'); Sy2=conv2(Iy2,g,'same'); Sxy=conv2(Ixy,g,'same');
-% convoluzione con il gaussiano (smoothing), somma pesata di una finestra
-% crea gli elementi smussati della matrice di struttura locale M
 
 
 %features detection
 [rr,cc]=size(Sx2);
 corner_reg=zeros(rr,cc);
 R_map=zeros(rr,cc);
-k=0.05;
+k=0.04;
 
 for ii=1:rr
     for jj=1:cc
@@ -141,19 +136,79 @@ for ii=1:rr
     end
 end
 
-
-figure,imagesc(corner_reg.*I),colormap gray,title('corner regions')
+figure,imagesc(corner_reg.*I),colormap gray,title('Corner Regions')
 figure,imagesc(R_map),colormap jet,title('R map');
 
-
 L= bwlabel(corner_reg);
-prop=regionprops(L,'Centroid'); %FUNZIONE CHE CALCOLA ARE CENTRO E BOUNDINGBOX DI UN BOLB REGIONE CONNESSA
+prop=regionprops(L,'Centroid');
 
-% 2. Estrai tutti i centroidi dalla struttura 'prop' in una singola matrice.
-% La funzione 'cat' è perfetta per unire tutti i campi 'Centroid'
-% in una matrice a due colonne [x_centroid, y_centroid].
 centroids = cat(1, prop.Centroid);
 
-figure,imagesc(I),colormap gray,title('detected object')
+figure,imagesc(I),colormap gray,title('Detected Corners')
+hold on
+plot(centroids(:,1), centroids(:,2),'*r')
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+[rr,cc]=size(Sx2);
+corner_reg=zeros(rr,cc);
+R_map=zeros(rr,cc);
+k=0.04;
+
+for ii=1:rr
+    for jj=1:cc
+        %define at each pixel x,y the matrix
+        M=[Sx2(ii,jj),Sxy(ii,jj);Sxy(ii,jj),Sy2(ii,jj)];
+        %compute the response of the detector at each pixel
+        R=det(M) - k*(trace(M).^2);
+        R_map(ii,jj)=R;
+
+        max_R_map = max(R_map(:));
+        threshold = 0.1 * max_R_map;
+        
+        if R>threshold       
+            corner_reg(ii,jj)=1;
+        end
+    end
+end
+
+L= bwlabel(corner_reg);
+prop=regionprops(L,'Centroid');
+
+centroids = cat(1, prop.Centroid);
+
+figure,imagesc(I),colormap gray,title('Detected Corners with Lower Threshold')
+hold on
+plot(centroids(:,1), centroids(:,2),'*r')
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+corner_reg=zeros(rr,cc);
+R_map=zeros(rr,cc);
+k=0.2;
+
+for ii=1:rr
+    for jj=1:cc
+        %define at each pixel x,y the matrix
+        M=[Sx2(ii,jj),Sxy(ii,jj);Sxy(ii,jj),Sy2(ii,jj)];
+        %compute the response of the detector at each pixel
+        R=det(M) - k*(trace(M).^2);
+        R_map(ii,jj)=R;
+
+        max_R_map = max(R_map(:));
+        threshold = 0.3 * max_R_map;
+        
+        if R>threshold       
+            corner_reg(ii,jj)=1;
+        end
+    end
+end
+
+L= bwlabel(corner_reg);
+prop=regionprops(L,'Centroid');
+
+centroids = cat(1, prop.Centroid);
+
+figure,imagesc(I),colormap gray,title('Detected Corners with Higher k')
 hold on
 plot(centroids(:,1), centroids(:,2),'*r')
