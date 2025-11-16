@@ -15,6 +15,8 @@ img{4}=im2gray(imread('Lab5_testimages/ur_c_s_03a_01_L_0379.png'));
 img{5}=im2gray(imread('Lab5_testimages/ur_c_s_03a_01_L_0380.png'));
 img{6}=im2gray(imread('Lab5_testimages/ur_c_s_03a_01_L_0381.png'));
 
+%%
+
 figure,imagesc(img{1}),colormap gray
 
 T{1}=img{1}(360:410,690:770);
@@ -37,10 +39,13 @@ end
 T{2}=img{1}(370:410,560:642);
 figure,imagesc(T{2}),colormap gray;
 
+tic;
 for i=1:6
     C_dark{i} = NCC_function(T{2}, img{i});
     figure, imagesc(C_dark{i}), colormap gray;
 end
+
+time_medium_template = toc;
 
 for i=1:6
     find_car(T{2}, C_dark{i}, img{i},i);
@@ -48,37 +53,43 @@ end
 
 %%
 %------------------------------------
-% WINDOW 1 
+% SMALLER WINDOW
 %------------------------------------
 
-T{3}=img{1}(365:415,555:647);
+T{3}=img{1}(380:400,580:622);
 figure,imagesc(T{3}),colormap gray;
 
+tic;
 for i=1:6
-    C_dark{i} = NCC_function(T{3}, img{i});
-    figure, imagesc(C_dark{i}), colormap gray;
+    C2_dark{i} = NCC_function(T{3}, img{i});
+    figure, imagesc(C2_dark{i}), colormap gray;
 end
 
+time_small_template = toc;
+
 for i=1:6
-    find_car(T{3}, C_dark{i}, img{i},i);
+    find_car(T{3}, C2_dark{i}, img{i},i);
 end
+
 
 %%
 %------------------------------------
-% WINDOW 2
+% BIGGER WINDOW
 %------------------------------------
-T{4}=img{1}(360:420,550:652);
+T{4}=img{1}(350:430,540:662);
 figure,imagesc(T{4}),colormap gray;
 
+tic;
 for i=1:6
-    C_dark{i} = NCC_function(T{4}, img{i});
-    figure, imagesc(C_dark{i}), colormap gray;
+    C3_dark{i} = NCC_function(T{4}, img{i});
+    figure, imagesc(C3_dark{i}), colormap gray;
 end
 
-for i=1:6
-    find_car(T{4}, C_dark{i}, img{i},i);
-end
+time_big_template = toc;
 
+for i=1:6
+    find_car(T{4}, C3_dark{i}, img{i},i);
+end
 
 %%
 %------------------------------------
