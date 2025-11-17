@@ -220,6 +220,6 @@ prop=regionprops(L,'Centroid');
 
 centroids = cat(1, prop.Centroid);
 
-figure,imagesc(I),colormap gray,title('Detected Corners with Higher k')
+figure,imagesc(I),colormap gray,title('Detected Corners with Lower k')
 hold on
 plot(centroids(:,1), centroids(:,2),'*r')
